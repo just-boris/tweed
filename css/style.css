@@ -1,0 +1,8 @@
+.input-form, .tweet {
+    margin-bottom: 20px;
+}
+
+.tweet {
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #c2c2c2;
+}
