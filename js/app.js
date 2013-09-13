@@ -19,27 +19,32 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         $scope.buttonText = loading ? 'Loading...' : 'Find!'
     }
     $scope.find = function() {
+        if($scope.requestPending) {
+            return;
+        }
         setLoading(true);
         storage.put("query", $scope.query);
         $location.search("query", $scope.query);
         $scope.lastQuery = $scope.query;
         $scope.pageNum = 1;
-        api("search_tweets", "q="+$scope.query, function (reply) {
+        twitter.request("search_tweets", {q:$scope.lastQuery}).then(function (reply) {
             $scope.statuses = reply.statuses;
             setLoading(false);
         });
     };
     $scope.nextPage = function() {
+        if($scope.requestPending) {
+            return;
+        }
         setLoading(true);
         var lastStatusId = $scope.statuses[$scope.statuses.length-1].id;
-        api("search_tweets", "q="+$scope.lastQuery+'&max_id='+lastStatusId, function (reply) {
+        twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId}).then(function (reply) {
             $scope.statuses = $scope.statuses.concat(reply.statuses);
             setLoading(false);
         });
     };
     setLoading(true);
-    twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4').then(function(result) {
-        api = result;
+    twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4').then(function() {
         setLoading(false);
         $scope.$watch(function() {
             return $location.search().query
@@ -49,7 +54,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
             }
         });
     });
-    var api;
     $scope.query = $location.search().query || "";
     setLoading(true);
 });
