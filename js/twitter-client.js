@@ -4,7 +4,7 @@ angular.module('twitter', ['ngResource']).factory('twitter', function($q, $rootS
             var args = arguments;
             $rootScope.$apply(function() {
                 callback.apply(window, args);
-            })
+            });
         }
     }
     return {
@@ -13,14 +13,13 @@ angular.module('twitter', ['ngResource']).factory('twitter', function($q, $rootS
                 deferred = $q.defer();
             cb.setConsumerKey(consumerKey, consumerSecret);
             cb.__call("oauth2_token", {}, function (reply) {
-                var bearer_token = reply.access_token;
-                $rootScope.$apply(function() {
-                    deferred.resolve(function (method, params, callback) {
-                        cb.__call(method, params, wrapCallback(callback),
-                            true // this parameter required
-                        );
-                    });
+//                var bearer_token = reply.access_token;
+                deferred.resolve(function (method, params, callback) {
+                    cb.__call(method, params, wrapCallback(callback),
+                        true // this parameter required
+                    );
                 });
+                $rootScope.$apply();
             });
             return deferred.promise;
         }
