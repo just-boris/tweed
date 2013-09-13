@@ -13,7 +13,7 @@ angular.module('tweed', ['twitter']).factory('storage', function() {
             return localStorage.getItem(prefix+name);
         }
     };
-}).controller('AppCtrl', function($scope, twitter, storage) {
+}).controller('AppCtrl', function($scope, $location, twitter, storage) {
     function setLoading(loading) {
         $scope.twitterLoading = loading;
         $scope.buttonText = loading ? 'Loading...' : 'Find!'
@@ -21,6 +21,7 @@ angular.module('tweed', ['twitter']).factory('storage', function() {
     $scope.find = function() {
         setLoading(true);
         storage.put("query", $scope.query);
+        $location.search("query", $scope.query)
         api("search_tweets", "q="+$scope.query, function (reply) {
             $scope.statuses = reply.statuses;
             setLoading(false);
@@ -35,6 +36,6 @@ angular.module('tweed', ['twitter']).factory('storage', function() {
         }
     });
     var api;
-    $scope.query = storage.get("query") || "";
+    $scope.query = $location.search().query || storage.get("query") || "";
     setLoading(true);
 });
