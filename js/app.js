@@ -1,4 +1,4 @@
-angular.module('tweed', ['twitter']).factory('storage', function() {
+angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', function() {
     "use strict";
     var prefix = "tweed-";
     return {
@@ -13,19 +13,6 @@ angular.module('tweed', ['twitter']).factory('storage', function() {
             return localStorage.getItem(prefix+name);
         }
     };
-}).directive('infiniteScroll', function($window) {
-    return function(scope, element, attrs) {
-        $window = angular.element($window);
-        $window.on('scroll', function() {
-            var windowBottom = $window.height() + $window.scrollTop(),
-                elementBottom = element.offset().top + element.height() * 0.9,
-                remaining = elementBottom - windowBottom;
-
-            if(remaining <= $window.height() && scope.$apply(attrs.ngShow)) {
-                scope.$apply(attrs.ngClick);
-            }
-        });
-    }
 }).controller('AppCtrl', function($scope, $location, twitter, storage) {
     function setLoading(loading) {
         $scope.requestPending = loading;

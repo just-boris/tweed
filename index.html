@@ -10,12 +10,13 @@
         <script src="lib/es5-shim.min.js" type="text/javascript"></script>
         <script src="lib/respond.min.js" type="text/javascript"></script>
     <![endif]-->
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.js"></script>
     <script type="text/javascript" src="lib/sha1.js"></script>
     <script type="text/javascript" src="lib/codebird.js"></script>
-    <script type="text/javascript" src="js/twitter-client.js"></script>
+    <script type="text/javascript" src="lib/ng-infinite-scroll.js"></script>
+    <script type="text/javascript" src="js/twitter-client/twitter-client.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body ng-app="tweed">
@@ -43,7 +44,8 @@
             <div class="col-lg-11"><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></div>
         </div>
         <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
-        <button infinite-scroll class="btn btn-block block" ng-show="statuses.length > 0 && lastQuery && !requestPending" ng-click="nextPage()">Show more tweets</button>
+        <button class="btn btn-block block" ng-show="statuses.length > 0 && lastQuery && !requestPending" ng-click="nextPage()"
+                infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending" infinite-scroll="nextPage()">Show more tweets</button>
     </div>
 </body>
 </html>
