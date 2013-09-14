@@ -30,7 +30,12 @@
                     <input class="form-control" type="search" ng-model="query" placeholder="Type some #hashtags for search...">
                 </div>
                 <div class="col-lg-3">
-                    <button class="btn btn-block" ng-disabled="requestPending">{{buttonText}}</button>
+                    <button class="btn btn-block" ng-disabled="requestPending">
+                        <span ng-switch on="requestPending">
+                            <span ng-switch-when="true">Loading...</span>
+                            <span ng-switch-default>Find!</span>
+                        </span>
+                    </button>
                 </div>
             </div>
         </form>
@@ -44,8 +49,13 @@
             <div class="col-lg-11"><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></div>
         </div>
         <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
-        <button class="btn btn-block block" ng-show="statuses.length > 0 && lastQuery && !requestPending" ng-click="nextPage()"
-                infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending" infinite-scroll="nextPage()">Show more tweets</button>
+        <button class="btn btn-block block" ng-disabled="requestPending" ng-show="statuses.length > 0 && lastQuery" ng-click="nextPage()"
+                infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending" infinite-scroll="nextPage()">
+            <span ng-switch on="requestPending">
+                <span ng-switch-when="true">Loading...</span>
+                <span ng-switch-default>Show more tweets</span>
+            </span>
+        </button>
     </div>
 </body>
 </html>

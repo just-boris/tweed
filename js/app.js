@@ -16,7 +16,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
 }).controller('AppCtrl', function($scope, $location, twitter, storage) {
     function setLoading(loading) {
         $scope.requestPending = loading;
-        $scope.buttonText = loading ? 'Loading...' : 'Find!'
     }
     $scope.find = function() {
         if($scope.requestPending) {
@@ -27,6 +26,7 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         $location.search("query", $scope.query);
         $scope.lastQuery = $scope.query;
         $scope.pageNum = 1;
+        $scope.statuses = [];
         twitter.request("search_tweets", {q:$scope.lastQuery}).then(function (reply) {
             $scope.statuses = reply.statuses;
             setLoading(false);
@@ -56,4 +56,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
     });
     $scope.query = $location.search().query || "";
     setLoading(true);
+}).config(function($locationProvider) {
+    $locationProvider.html5Mode(true).hashPrefix('!');
 });
