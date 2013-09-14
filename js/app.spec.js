@@ -52,6 +52,17 @@ describe('app controller', function() {
         expect(scope.requestPending).toBe(false);
     });
 
+    it('should show error message when auth fails', function() {
+        createController({query:'test'});
+
+        var errorObj = {error: 'error'};
+        twitterApiPromise.reject(errorObj);
+        scope.$apply();
+
+        expect(scope.requestPending).toBe(false);
+        expect(scope.requestError).toBe(errorObj);
+    });
+
     it('should contain empty query value', function() {
         createController({});
         expect(scope.query).toBe('');
@@ -83,6 +94,20 @@ describe('app controller', function() {
 
         scope.find();
         expect(scope.requestPending).toBe(true);
+    });
+
+    it('should show error message when search error happens', function() {
+        createController({query:'test'});
+
+        twitterApiPromise.resolve();
+        scope.$apply();
+
+        scope.find();
+        var errorObj = {error: 'error'};
+        twitterApiPromise.reject(errorObj);
+        scope.$apply();
+
+        expect(scope.requestError).toBe(errorObj);
     });
 
     it('should load statuses through service', function() {

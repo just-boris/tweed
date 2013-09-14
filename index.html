@@ -39,7 +39,11 @@
                 </div>
             </div>
         </form>
-        <div class="block" ng-show="lastQuery">Statuses with "{{lastQuery}}":</div>
+        <div class="block" ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</div>
+        <div class="alert alert-danger" ng-show="requestError">
+            <h5><b>Error!</b></h5>
+            <p ng-repeat="error in requestError.errors">{{error.message}}. Code: {{error.code}}</p>
+        </div>
         <div class="row tweet block" ng-repeat="status in statuses">
             <div class="col-lg-1">
                 <a class="thumbnail" ng-href="http://twitter.com/{{status.user.screen_name}}">
