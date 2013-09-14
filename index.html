@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tweed - twitter feed viewer</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -22,41 +23,43 @@
     <script type="text/javascript" src="js/twitter-client/twitter-client.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
-<body ng-app="tweed">
-    <div class="container" ng-controller="AppCtrl">
-        <div class="page-header">
-            <h1><a href="#" ng-click="reset();query=''">Tweed</a> <small>twitter feed viewer</small></h1>
-        </div>
-        <form ng-submit="find()" class="input-form block">
-            <div class="row">
-                <div class="col-lg-9">
-                    <input class="form-control" type="search" ng-model="query" placeholder="Type some #hashtags for search...">
-                </div>
-                <div class="col-lg-3">
-                    <button class="btn btn-block" ng-disabled="requestPending">
-                        <span ng-switch on="requestPending">
-                            <span ng-switch-when="true">Loading...</span>
-                            <span ng-switch-default>Find!</span>
-                        </span>
-                    </button>
-                </div>
+<body ng-app="tweed" ng-controller="AppCtrl">
+    <div class="heading">
+        <div class="container">
+            <div class="page-header">
+                <h1><a href="#" ng-click="reset();query=''">Tweed</a> <small>twitter feed viewer</small></h1>
             </div>
-        </form>
+            <form ng-submit="find()" class="input-form block">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <input class="form-control" type="search" ng-model="query" placeholder="Type some #hashtags for search...">
+                    </div>
+                    <div class="col-xs-3">
+                        <span class="btn btn-block btn-primary" ng-disabled="requestPending">
+                            <span ng-switch on="requestPending">
+                                <span ng-switch-when="true">Loading...</span>
+                                <span ng-switch-default>Find!</span>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container content">
         <div class="block" ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</div>
         <div class="alert alert-danger" ng-show="requestError">
             <h5><b>Error!</b></h5>
             <p ng-repeat="error in requestError.errors">{{error.message}}. Code: {{error.code}}</p>
         </div>
-        <div class="row tweet block" ng-repeat="status in statuses">
-            <div class="col-lg-1">
-                <a class="thumbnail" ng-href="http://twitter.com/{{status.user.screen_name}}">
-                    <img ng-src="{{status.user.profile_image_url}}">
-                </a>
-            </div>
-            <div class="col-lg-11"><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></div>
+        <div class="tweet block" ng-repeat="status in statuses">
+            <a class="thumbnail pull-left" ng-href="http://twitter.com/{{status.user.screen_name}}">
+                <img ng-src="{{status.user.profile_image_url}}">
+            </a>
+            <p><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></p>
         </div>
         <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
-        <button class="btn btn-block block" ng-disabled="requestPending" ng-hide="statuses.length == 0 || !lastQuery || noMoreTweets" ng-click="nextPage()"
+        <button class="btn btn-block block btn-default" ng-disabled="requestPending" ng-hide="statuses.length == 0 || !lastQuery || noMoreTweets" ng-click="nextPage()"
                 infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending || noMoreTweets" infinite-scroll="nextPage()">
             <span ng-switch on="requestPending">
                 <span ng-switch-when="true">Loading...</span>
