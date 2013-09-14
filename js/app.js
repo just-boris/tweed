@@ -25,7 +25,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         storage.put("query", $scope.query);
         $location.search("query", $scope.query);
         $scope.lastQuery = $scope.query;
-        $scope.pageNum = 1;
         $scope.statuses = [];
         twitter.request("search_tweets", {q:$scope.lastQuery}).then(function (reply) {
             $scope.statuses = reply.statuses;

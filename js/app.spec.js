@@ -96,7 +96,6 @@ describe('app controller', function() {
         twitterApiPromise.resolve({statuses: ['status1', 'status2']});
         scope.$apply();
 
-        expect(scope.pageNum).toBe(1);
         expect(scope.statuses.length).toBe(2);
     });
 
@@ -116,7 +115,6 @@ describe('app controller', function() {
         twitterApiPromise.resolve({statuses: ['status3']});
         scope.$apply();
 
-        expect(scope.pageNum).toBe(2);
         expect(scope.statuses.length).toBe(3);
     });
 
