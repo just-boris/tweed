@@ -14,6 +14,7 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         }
     };
 }).controller('AppCtrl', function($scope, $location, twitter, storage) {
+    "use strict";
     function beforeLoad() {
         $scope.requestPending = true;
     }
@@ -45,7 +46,12 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         beforeLoad();
         var lastStatusId = $scope.statuses[$scope.statuses.length-1].id;
         twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId}).then(function (reply) {
-            $scope.statuses = $scope.statuses.concat(reply.statuses);
+            if(reply.statuses.length > 0) {
+                $scope.statuses = $scope.statuses.concat(reply.statuses);
+            }
+            else {
+                $scope.noMoreTweets = true;
+            }
             afterLoad();
         }, errback);
     };

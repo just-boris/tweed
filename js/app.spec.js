@@ -143,6 +143,24 @@ describe('app controller', function() {
         expect(scope.statuses.length).toBe(3);
     });
 
+    it('should end pagination when next page is empty', function() {
+        createController({query:'test'});
+
+        twitterApiPromise.resolve();
+        scope.$apply();
+
+        scope.find();
+
+        twitterApiPromise.resolve({statuses: ['status1', 'status2']});
+        scope.$apply();
+
+        scope.nextPage();
+        twitterApiPromise.resolve({statuses: []});
+        scope.$apply();
+
+        expect(scope.noMoreTweets).toBe(true);
+    });
+
 
     afterEach(function() {
         scope.$destroy();
