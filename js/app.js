@@ -15,7 +15,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
     };
 }).controller('AppCtrl', function($scope, $location, twitter, storage) {
     function beforeLoad() {
-        delete $scope.requestError;
         $scope.requestPending = true;
     }
     function afterLoad() {
@@ -26,14 +25,14 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         afterLoad();
     }
     $scope.find = function() {
-        if($scope.requestPending) {
+        if($scope.requestPending || !$scope.query) {
             return;
         }
         beforeLoad();
+        $scope.reset();
         storage.put("query", $scope.query);
         $location.search("query", $scope.query);
         $scope.lastQuery = $scope.query;
-        $scope.statuses = [];
         twitter.request("search_tweets", {q:$scope.lastQuery}).then(function (reply) {
             $scope.statuses = reply.statuses;
             afterLoad();
@@ -50,19 +49,21 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
             afterLoad();
         }, errback);
     };
+    $scope.reset = function() {
+        delete $scope.requestError;
+        delete $scope.lastQuery;
+        $scope.statuses = [];
+    };
     beforeLoad();
     twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4').then(function() {
         afterLoad();
         $scope.$watch(function() {
             return $location.search().query
-        }, function(query) {
-            if(query) {
-                $scope.find()
-            }
+        }, function() {
+            $scope.find()
         });
     }, errback);
     $scope.query = $location.search().query || "";
-    beforeLoad();
 }).config(function($locationProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 });

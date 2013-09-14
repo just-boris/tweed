@@ -10,6 +10,9 @@
         <script src="lib/es5-shim.min.js" type="text/javascript"></script>
         <script src="lib/respond.min.js" type="text/javascript"></script>
     <![endif]-->
+    <script type = text/javascript>
+        document.write('<base href="'+location.pathname+'">');
+    </script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.js"></script>
@@ -22,7 +25,7 @@
 <body ng-app="tweed">
     <div class="container" ng-controller="AppCtrl">
         <div class="page-header">
-            <h1><a href="#" ng-click="query='';find();">Tweed</a> <small>twitter feed viewer</small></h1>
+            <h1><a href="#" ng-click="reset();query=''">Tweed</a> <small>twitter feed viewer</small></h1>
         </div>
         <form ng-submit="find()" class="input-form block">
             <div class="row">
