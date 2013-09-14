@@ -2,7 +2,7 @@ angular.module('twitter', ['ngResource']).factory('twitter', function($q, $rootS
     function callApi(method, params) {
         var deferred = $q.defer();
         cb.__call(method, params, function (reply) {
-            deferred.resolve(reply);
+            deferred[reply.httpstatus === 200 ? 'resolve' : 'reject'](reply);
             $rootScope.$apply();
         }, true);
         return deferred.promise;
