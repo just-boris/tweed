@@ -8,6 +8,20 @@
     box-shadow: 0 1px 10px #ccc;
 }
 
+.page-header a {
+    font-weight: bold;
+}
+
+.tweed-ico {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    position: relative;
+    margin-right: 5px;
+    top: 5px;
+    background: url(../img/tweed-pattern.png);
+}
+
 .content {
     margin-top: 200px;
 }
