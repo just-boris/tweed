@@ -127,7 +127,8 @@ describe('app controller', function() {
         scope.$apply();
 
         scope.nextPage();
-        twitterApiPromise.resolve({statuses: ['status3']});
+        //simulate twitter api, it includes last status to response
+        twitterApiPromise.resolve({statuses: ['status2', 'status3']});
         scope.$apply();
 
         expect(scope.statuses.length).toBe(3);
@@ -142,7 +143,8 @@ describe('app controller', function() {
         scope.$apply();
 
         scope.nextPage();
-        twitterApiPromise.resolve({statuses: []});
+        //simulate twitter api, it includes last status to response
+        twitterApiPromise.resolve({statuses: ['status2']});
         scope.$apply();
 
         expect(scope.noMoreTweets).toBe(true);

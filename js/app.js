@@ -41,8 +41,13 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
             return;
         }
         beforeLoad();
-        var lastStatusId = $scope.statuses[$scope.statuses.length-1].id;
-        twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId+1}).then(function (reply) {
+        var lastStatusId = $scope.statuses[$scope.statuses.length-1].id_str;
+        twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId}).then(function (reply) {
+            //we need to remove first tweet, because it loading twice
+            //it is feature of twitter pagination
+            if(reply.statuses.length > 0 && reply.statuses[0].id_str == lastStatusId) {
+                reply.statuses.splice(0, 1);
+            }
             if(reply.statuses.length > 0) {
                 $scope.statuses = $scope.statuses.concat(reply.statuses);
             }
@@ -64,7 +69,7 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
         $scope.$watch(function() {
             return $location.search().query
         }, function(query) {
-            $scope.query = query
+            $scope.query = query;
             $scope.find()
         });
     });
