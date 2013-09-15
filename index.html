@@ -60,7 +60,7 @@
                     <a class="thumbnail tweet-avatar pull-left" ng-href="http://twitter.com/{{status.user.screen_name}}">
                         <img ng-src="{{status.user.profile_image_url}}">
                     </a>
-                    <p class="pull-right tweet-date">{{ status.created_at | twitterDate:'MMM d, H:mm:ss' }}</p>
+                    <p class="pull-right tweet-date"><i>{{ status.created_at | twitterDate:'MMM d, H:mm:ss' }}</i></p>
                     <p><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></p>
                 </div>
                 <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
