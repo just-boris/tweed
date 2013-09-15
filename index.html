@@ -54,7 +54,7 @@
                 <h4 ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</h4>
                 <div class="alert alert-danger" ng-show="requestError">
                     <h5><b>Error!</b></h5>
-                    <p ng-repeat="error in requestError.errors">{{error.message}}. Code: {{error.code}}</p>
+                    <p ng-repeat="error in requestError.errors">{{error.message}}. <span ng-show="error.code">Code: {{error.code}}</span></p>
                 </div>
                 <div class="tweet block" ng-repeat="status in statuses">
                     <a class="thumbnail tweet-avatar pull-left" ng-href="http://twitter.com/{{status.user.screen_name}}">

@@ -22,12 +22,20 @@ angular.module('twitter', ['ngResource']).factory('twitter', function($q, $timeo
     var cb = new Codebird();
     return {
         prepare: function(consumerKey, consumerSecret) {
+            var canUseCors = 'withCredentials' in new XMLHttpRequest();
             cb.setConsumerKey(consumerKey, consumerSecret);
-            return callApi("oauth2_token", {}).then(function () {
-                $rootScope.$broadcast('twitterReady');
-            }, function (reply) {
-                $rootScope.$broadcast('twitterAuthFailed', reply);
-            });
+            if(canUseCors) {
+                callApi("oauth2_token", {}).then(function () {
+                    $rootScope.$broadcast('twitterReady');
+                }, function (reply) {
+                    $rootScope.$broadcast('twitterAuthFailed', reply);
+                });
+            }
+            else {
+                $timeout(function() {
+                    $rootScope.$broadcast('twitterAuthFailed', {errors: [{message: "Your browser doesn't support work with API, sorry"}]});
+                });
+            }
         },
         request: callApi
     }
