@@ -1,19 +1,4 @@
-angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', function() {
-    "use strict";
-    var prefix = "tweed-";
-    return {
-        put: function(name, value) {
-            if(value) {
-                localStorage.setItem(prefix+name, value);
-            } else {
-                localStorage.removeItem(prefix+name);
-            }
-        },
-        get: function(name) {
-            return localStorage.getItem(prefix+name);
-        }
-    };
-}).controller('AppCtrl', function($scope, $location, twitter, storage) {
+angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageModule']).controller('AppCtrl', function($scope, $location, twitter) {
     "use strict";
     function beforeLoad() {
         $scope.requestPending = true;
@@ -31,7 +16,6 @@ angular.module('tweed', ['twitter', 'infinite-scroll']).factory('storage', funct
         }
         beforeLoad();
         $scope.reset();
-        storage.put("query", $scope.query);
         $location.search("query", $scope.query);
         $scope.lastQuery = $scope.query;
         twitter.request("search_tweets", {q:$scope.lastQuery}).then(function (reply) {

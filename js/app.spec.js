@@ -27,11 +27,7 @@ describe('app controller', function() {
                     return search;
                 }
             },
-            twitter: twitterMock,
-            storage: {
-                put: angular.noop,
-                get: angular.noop
-            }
+            twitter: twitterMock
         });
     }
 
