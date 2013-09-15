@@ -59,12 +59,12 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
     };
     beforeLoad();
     twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4');
-    $scope.query = $location.search().query || "";
     $scope.$on('twitterReady', function() {
         afterLoad();
         $scope.$watch(function() {
             return $location.search().query
-        }, function() {
+        }, function(query) {
+            $scope.query = query
             $scope.find()
         });
     });

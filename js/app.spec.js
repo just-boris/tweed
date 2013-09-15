@@ -60,7 +60,10 @@ describe('app controller', function() {
 
     it('should contain empty query value', function() {
         createController({});
-        expect(scope.query).toBe('');
+        scope.$emit('twitterReady');
+        scope.$apply();
+
+        expect(scope.query).toBeUndefined();
     });
 
     it('should not let do search while twitter API is not ready', function() {
@@ -68,6 +71,7 @@ describe('app controller', function() {
         scope.find();
         expect(twitterRequest).not.toHaveBeenCalled();
         scope.$emit('twitterReady');
+        scope.$apply();
 
         scope.find();
         expect(twitterRequest).toHaveBeenCalled();
@@ -75,10 +79,10 @@ describe('app controller', function() {
 
     it('should grab query from location service and search when twitter ready', function() {
         createController({query: 'test'});
-        expect(scope.query).toBe('test');
         scope.$emit('twitterReady');
         scope.$apply();
 
+        expect(scope.query).toBe('test');
         expect(twitterRequest).toHaveBeenCalled();
     });
 
