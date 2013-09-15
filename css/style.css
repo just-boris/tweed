@@ -16,6 +16,11 @@
     margin-bottom: 20px;
 }
 
+.trend {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .tweet {
     border-bottom: 1px dashed #c2c2c2;
     padding-bottom: 20px;

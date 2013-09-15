@@ -23,7 +23,11 @@ angular.module('twitter', ['ngResource']).factory('twitter', function($q, $timeo
     return {
         prepare: function(consumerKey, consumerSecret) {
             cb.setConsumerKey(consumerKey, consumerSecret);
-            return callApi("oauth2_token", {})
+            return callApi("oauth2_token", {}).then(function () {
+                $rootScope.$broadcast('twitterReady');
+            }, function (reply) {
+                $rootScope.$broadcast('twitterAuthFailed', reply);
+            });
         },
         request: callApi
     }

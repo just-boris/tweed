@@ -1,21 +1,23 @@
 describe('app controller', function() {
-    var twitterMock = {
-            prepare: function() {
-                twitterApiPromise = $q.defer();
-                return twitterApiPromise.promise;
-            },
-            request: function() {
-                twitterApiPromise = $q.defer();
-                return twitterApiPromise.promise;
-            }
-        }, twitterApiPromise,
+    var twitterPrepare, twitterRequest, twitterApiPromise,
         $q, $controller, scope;
+
+    function createTwitterMock() {
+        twitterPrepare = jasmine.createSpy('twitterPrepare');
+        twitterRequest = jasmine.createSpy('twitterRequest');
+        return {
+            prepare: twitterPrepare,
+            request: twitterRequest.andCallFake(function() {
+                twitterApiPromise = $q.defer();
+                return twitterApiPromise.promise;
+            })
+        }
+    }
 
     beforeEach(module('tweed'));
     beforeEach(inject(function(_$controller_, $rootScope, _$q_) {
         $q = _$q_;
         $controller = _$controller_;
-        spyOn(twitterMock, 'prepare').andCallThrough();
         scope = $rootScope.$new();
     }));
 
@@ -27,23 +29,21 @@ describe('app controller', function() {
                     return search;
                 }
             },
-            twitter: twitterMock
+            twitter: createTwitterMock()
         });
     }
 
 
     it('should make request authorize on twitter API', function() {
         createController({});
-        expect(twitterMock.prepare).toHaveBeenCalled();
+        expect(twitterPrepare).toHaveBeenCalled();
         expect(scope.requestPending).toBe(true);
     });
 
     it('should set loading state when twitter API is preparing and unset when ready', function() {
         createController({});
         expect(scope.requestPending).toBe(true);
-
-        twitterApiPromise.resolve();
-        scope.$apply();
+        scope.$emit('twitterReady');
 
         expect(scope.requestPending).toBe(false);
     });
@@ -52,8 +52,7 @@ describe('app controller', function() {
         createController({query:'test'});
 
         var errorObj = {error: 'error'};
-        twitterApiPromise.reject(errorObj);
-        scope.$apply();
+        scope.$emit('twitterAuthFailed', errorObj);
 
         expect(scope.requestPending).toBe(false);
         expect(scope.requestError).toBe(errorObj);
@@ -64,41 +63,38 @@ describe('app controller', function() {
         expect(scope.query).toBe('');
     });
 
-    it('should grab query from location service', function() {
-        createController({query: 'test'});
-        expect(scope.query).toBe('test');
-    });
-
     it('should not let do search while twitter API is not ready', function() {
-        spyOn(twitterMock, 'request').andCallThrough();
         createController({query:'test'});
         scope.find();
-        expect(twitterMock.request).not.toHaveBeenCalled();
-
-        twitterApiPromise.resolve();
-        scope.$apply();
+        expect(twitterRequest).not.toHaveBeenCalled();
+        scope.$emit('twitterReady');
 
         scope.find();
-        expect(twitterMock.request).toHaveBeenCalled();
+        expect(twitterRequest).toHaveBeenCalled();
+    });
+
+    it('should grab query from location service and search when twitter ready', function() {
+        createController({query: 'test'});
+        expect(scope.query).toBe('test');
+        scope.$emit('twitterReady');
+        scope.$apply();
+
+        expect(twitterRequest).toHaveBeenCalled();
     });
 
     it('should set loading state before search', function() {
-        createController({query:'test'});
-
-        twitterApiPromise.resolve();
+        createController({query: 'test'});
+        scope.$emit('twitterReady');
         scope.$apply();
 
-        scope.find();
         expect(scope.requestPending).toBe(true);
     });
 
     it('should show error message when search error happens', function() {
-        createController({query:'test'});
-
-        twitterApiPromise.resolve();
+        createController({query: 'test'});
+        scope.$emit('twitterReady');
         scope.$apply();
 
-        scope.find();
         var errorObj = {error: 'error'};
         twitterApiPromise.reject(errorObj);
         scope.$apply();
@@ -107,12 +103,9 @@ describe('app controller', function() {
     });
 
     it('should load statuses through service', function() {
-        createController({query:'test'});
-
-        twitterApiPromise.resolve();
+        createController({query: 'test'});
+        scope.$emit('twitterReady');
         scope.$apply();
-
-        scope.find();
 
         twitterApiPromise.resolve({statuses: ['status1', 'status2']});
         scope.$apply();
@@ -123,11 +116,8 @@ describe('app controller', function() {
 
     it('should load next page when needed', function() {
         createController({query:'test'});
-
-        twitterApiPromise.resolve();
+        scope.$emit('twitterReady');
         scope.$apply();
-
-        scope.find();
 
         twitterApiPromise.resolve({statuses: ['status1', 'status2']});
         scope.$apply();
@@ -141,11 +131,8 @@ describe('app controller', function() {
 
     it('should end pagination when next page is empty', function() {
         createController({query:'test'});
-
-        twitterApiPromise.resolve();
+        scope.$emit('twitterReady');
         scope.$apply();
-
-        scope.find();
 
         twitterApiPromise.resolve({statuses: ['status1', 'status2']});
         scope.$apply();

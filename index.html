@@ -17,10 +17,12 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.js"></script>
+    <script type="text/javascript" src="lib/localStorageProvider.js"></script>
     <script type="text/javascript" src="lib/sha1.js"></script>
     <script type="text/javascript" src="lib/codebird.js"></script>
     <script type="text/javascript" src="lib/ng-infinite-scroll.js"></script>
     <script type="text/javascript" src="js/twitter-client/twitter-client.js"></script>
+    <script type="text/javascript" src="js/trends/trends.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body ng-app="tweed" ng-controller="AppCtrl">
@@ -35,7 +37,7 @@
                         <input class="form-control" type="search" ng-model="query" placeholder="Type some #hashtags for search...">
                     </div>
                     <div class="col-xs-3">
-                        <span class="btn btn-block btn-primary" ng-disabled="requestPending">
+                        <span class="btn btn-block btn-primary" ng-disabled="requestPending" ng-click="find()">
                             <span ng-switch on="requestPending">
                                 <span ng-switch-when="true">Loading...</span>
                                 <span ng-switch-default>Find!</span>
@@ -47,25 +49,44 @@
         </div>
     </div>
     <div class="container content">
-        <div class="block" ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</div>
-        <div class="alert alert-danger" ng-show="requestError">
-            <h5><b>Error!</b></h5>
-            <p ng-repeat="error in requestError.errors">{{error.message}}. Code: {{error.code}}</p>
+        <div class="row">
+            <div class="col-sm-8">
+                <h4 ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</h4>
+                <div class="alert alert-danger" ng-show="requestError">
+                    <h5><b>Error!</b></h5>
+                    <p ng-repeat="error in requestError.errors">{{error.message}}. Code: {{error.code}}</p>
+                </div>
+                <div class="tweet block" ng-repeat="status in statuses">
+                    <a class="thumbnail pull-left" ng-href="http://twitter.com/{{status.user.screen_name}}">
+                        <img ng-src="{{status.user.profile_image_url}}">
+                    </a>
+                    <p><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></p>
+                </div>
+                <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
+                <button class="btn btn-block block btn-default" ng-disabled="requestPending" ng-hide="statuses.length == 0 || !lastQuery || noMoreTweets" ng-click="nextPage()"
+                        infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending || noMoreTweets" infinite-scroll="nextPage()">
+                    <span ng-switch on="requestPending">
+                        <span ng-switch-when="true">Loading...</span>
+                        <span ng-switch-default>Show more tweets</span>
+                    </span>
+                </button>
+            </div>
+            <div class="col-sm-4 trends" ng-controller="TrendsCtrl">
+                <h4 ng-hide="showLocalTrends">
+                    Worldwide Trends
+                    <small class="btn-link" ng-click="loadLocalTrends()">show local</small>
+                </h4>
+                <h4 ng-show="showLocalTrends">
+                    Your local Trends
+                    <small class="btn-link" ng-click="loadWorldwideTrends()">show worldwide</small>
+                </h4>
+                <ul class="list-unstyled">
+                    <li ng-repeat="trend in trends" class="trend">
+                        <span class="btn-link" ng-click="find(trend.name);">{{trend.name}}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="tweet block" ng-repeat="status in statuses">
-            <a class="thumbnail pull-left" ng-href="http://twitter.com/{{status.user.screen_name}}">
-                <img ng-src="{{status.user.profile_image_url}}">
-            </a>
-            <p><b title="@{{status.user.screen_name}}"><a ng-href="http://twitter.com/{{status.user.screen_name}}">{{status.user.name}}</a></b>: <span ng-bind-html-unsafe="status.text"></span></p>
-        </div>
-        <div class="text-muted text-center block" ng-show="statuses.length == 0 && lastQuery && !requestPending">Tweets not found. Try another query.</div>
-        <button class="btn btn-block block btn-default" ng-disabled="requestPending" ng-hide="statuses.length == 0 || !lastQuery || noMoreTweets" ng-click="nextPage()"
-                infinite-scroll-disabled="statuses.length == 0 || !lastQuery || requestPending || noMoreTweets" infinite-scroll="nextPage()">
-            <span ng-switch on="requestPending">
-                <span ng-switch-when="true">Loading...</span>
-                <span ng-switch-default>Show more tweets</span>
-            </span>
-        </button>
     </div>
 </body>
 </html>

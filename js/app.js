@@ -45,15 +45,19 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
         $scope.statuses = [];
     };
     beforeLoad();
-    twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4').then(function() {
+    twitter.prepare('FFUuamGgKkXA5oHbNPtubQ', 'zTESbQPPM2FzYqUHvUV7lCIavQ6A0db74Pjn0W4N4');
+    $scope.query = $location.search().query || "";
+    $scope.$on('twitterReady', function() {
         afterLoad();
         $scope.$watch(function() {
             return $location.search().query
         }, function() {
             $scope.find()
         });
-    }, errback);
-    $scope.query = $location.search().query || "";
+    });
+    $scope.$on('twitterAuthFailed', function(event, errors) {
+        errback(errors);
+    });
 }).config(function($locationProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 });
