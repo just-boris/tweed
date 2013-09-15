@@ -1,14 +1,14 @@
 describe('twitter api client', function() {
-    var twitter;
+    var twitter, Codebird;
 
-    //mock twitter API lib
-    var Codebird  = window.Codebird = function() {};
-    Codebird.prototype = {
-        setConsumerKey: jasmine.createSpy('setConsumerKey'),
-        __call: jasmine.createSpy('__call')
-    };
     beforeEach(module('twitter'));
     beforeEach(inject(function($injector) {
+        //mock twitter API lib
+        Codebird  = window.Codebird = function() {};
+        Codebird.prototype = {
+            setConsumerKey: jasmine.createSpy('setConsumerKey'),
+            __call: jasmine.createSpy('__call')
+        };
         twitter = $injector.get('twitter');
     }));
 
@@ -44,6 +44,25 @@ describe('twitter api client', function() {
 
         expect(callbacks.success).toHaveBeenCalled();
     });
+
+    it("should cache success response like angular $http service", function() {
+        var callbacks = {
+            success: jasmine.createSpy('success'),
+            failure: jasmine.createSpy('failure')
+        };
+        twitter.request('test_method', {someParam: 'test'}).then(callbacks.success, callbacks.failure);
+        var serviceCallback = Codebird.prototype.__call.mostRecentCall.args[2];
+        expect(typeof serviceCallback).toBe('function');
+
+        serviceCallback({httpstatus: 200});
+        expect(Codebird.prototype.__call.calls.length).toBe(1);
+        expect(callbacks.success).toHaveBeenCalled();
+
+        twitter.request('test_method', {someParam: 'test'});
+        expect(Codebird.prototype.__call.calls.length).toBe(1);
+        expect(callbacks.success).toHaveBeenCalled();
+    });
+
 
     it("should reject promise when request fails", function() {
         var callbacks = {
