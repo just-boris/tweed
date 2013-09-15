@@ -1,4 +1,17 @@
-angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageModule']).controller('AppCtrl', function($scope, $location, twitter) {
+angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageModule'])
+//default date formatter can't parse twitter date, use custom
+.filter('twitterDate', function($filter) {
+    return function(date, format) {
+        if(date) {
+            var dateObj = new Date(date);
+            if(!isNaN(dateObj.valueOf())) {
+                return $filter('date')(dateObj, format);
+            }
+        }
+        return date;
+    }
+})
+.controller('AppCtrl', function($scope, $location, twitter) {
     "use strict";
     function beforeLoad() {
         $scope.requestPending = true;
@@ -29,7 +42,7 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
         }
         beforeLoad();
         var lastStatusId = $scope.statuses[$scope.statuses.length-1].id;
-        twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId}).then(function (reply) {
+        twitter.request("search_tweets", {q:$scope.lastQuery, max_id: lastStatusId+1}).then(function (reply) {
             if(reply.statuses.length > 0) {
                 $scope.statuses = $scope.statuses.concat(reply.statuses);
             }

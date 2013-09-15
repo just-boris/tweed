@@ -26,9 +26,11 @@
     padding-bottom: 20px;
     overflow: hidden;
 }
-
-.tweet .thumbnail {
+.tweet-avatar {
     margin-right: 10px;
+}
+.tweet-date {
+    margin-left: 10px;
 }
 
 @media (max-width: 480px) {
