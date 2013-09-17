@@ -14,11 +14,12 @@
 
 .tweed-ico {
     display: inline-block;
+    border-radius: 4px;
     height: 40px;
     width: 40px;
     position: relative;
     margin-right: 5px;
-    top: 5px;
+    top: 6px;
     background: url(../img/tweed-pattern.png);
 }
 
