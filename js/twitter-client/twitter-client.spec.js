@@ -1,5 +1,5 @@
 describe('twitter api client', function() {
-    var twitter, Codebird, $rootScope;
+    var twitter, Codebird, $rootScope, $timeout;
 
     beforeEach(module('twitter'));
     beforeEach(inject(function($injector, _$rootScope_, _$timeout_) {
@@ -33,7 +33,7 @@ describe('twitter api client', function() {
         expect(callbacks.success).toHaveBeenCalled();
     });
 
-    it("should fire error event when authorization fails", function() {
+    it("should fire an error event when authorization fails", function() {
         var callbacks = {
             success: jasmine.createSpy('success'),
             failure: jasmine.createSpy('failure')
@@ -51,7 +51,7 @@ describe('twitter api client', function() {
         expect(callbacks.failure).toHaveBeenCalled();
     });
 
-    it("should fire error event when browser doesn't support CORS", function() {
+    it("should fire an error event when browser doesn't support CORS", function() {
         var oldXMLHttpRequest = window.XMLHttpRequest,
             failureCallback = jasmine.createSpy('authFailCallback');
         window.XMLHttpRequest = angular.noop;
