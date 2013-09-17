@@ -21,11 +21,11 @@ angular.module('trends', ['twitter']).controller('TrendsCtrl', function($scope, 
                         loadTrendsOnPlace(reply[0].woeid);
                     }, onError);
             }, function() {
-                $scope.requestError = {errors:[{message: 'Geolocation error'}]};
+                onError({errors:[{message: 'Geolocation error'}]});
                 $scope.$apply();
             });
         } else {
-            $scope.requestError = {errors:[{message: 'Browser not support geolocaton'}]};
+            onError({errors:[{message: 'Browser does not support geolocation'}]});
             $scope.$apply();
         }
     };

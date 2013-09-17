@@ -46,7 +46,7 @@ describe('twitter trends controller', function() {
     }
 
 
-    it('should load trends when twitter ready', function() {
+    it('should load trends when twitter is ready', function() {
         createController({});
         expect(twitterRequest).not.toHaveBeenCalled();
         scope.$emit('twitterReady');
@@ -91,6 +91,18 @@ describe('twitter trends controller', function() {
 
         expect(scope.trends).toBe(trendsResponse);
     });
+
+    it('should show error message when geolocation fails', function() {
+        navigator.geolocation.getCurrentPosition = function(callback, errback) {
+            errback();
+        };
+        createController({'show-local-trends': true});
+        scope.$emit('twitterReady');
+
+        expect(scope.$parent.requestError).toBeDefined();
+        expect(scope.$parent.requestError.errors[0].message).toBe('Geolocation error');
+    });
+    //TODO: create a test for unsupported geolocation. Geolocation object cannot be deleted to simulate this case
 
     it('should save new settings in the storage', function() {
         createController({'show-local-trends': false});
