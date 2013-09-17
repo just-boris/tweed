@@ -1,4 +1,4 @@
-angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageModule'])
+angular.module('tweed', ['twitter', 'pagetitle', 'trends', 'infinite-scroll', 'localStorageModule'])
 //default date formatter can't parse twitter date, use custom
 .filter('twitterDate', function($filter) {
     return function(date, format) {
@@ -70,7 +70,12 @@ angular.module('tweed', ['twitter', 'trends', 'infinite-scroll', 'localStorageMo
             return $location.search().query
         }, function(query) {
             $scope.query = query;
-            $scope.find()
+            if(query) {
+                $scope.find();
+            }
+            else {
+                $scope.reset();
+            }
         });
     });
     $scope.$on('twitterAuthFailed', function(event, errors) {

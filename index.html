@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="tweed" ng-controller="AppCtrl">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Tweed - twitter feed viewer</title>
+    <title tweed-pagetitle>Tweed - twitter feed viewer</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <!--[if lt IE 9]>
@@ -21,11 +21,12 @@
     <script type="text/javascript" src="lib/sha1.js"></script>
     <script type="text/javascript" src="lib/codebird.js"></script>
     <script type="text/javascript" src="lib/ng-infinite-scroll.js"></script>
+    <script type="text/javascript" src="js/pagetitle/pagetitle.js"></script>
     <script type="text/javascript" src="js/twitter-client/twitter-client.js"></script>
     <script type="text/javascript" src="js/trends/trends.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
-<body ng-app="tweed" ng-controller="AppCtrl">
+<body>
     <div class="heading">
         <div class="container">
             <div class="page-header">
