@@ -34,13 +34,13 @@ describe('app controller', function() {
     }
 
 
-    it('should make request authorize on twitter API', function() {
+    it('should make request authorization on twitter API', function() {
         createController({});
         expect(twitterPrepare).toHaveBeenCalled();
         expect(scope.requestPending).toBe(true);
     });
 
-    it('should set loading state when twitter API is preparing and unset when ready', function() {
+    it('should keep loading state while twitter API is preparing', function() {
         createController({});
         expect(scope.requestPending).toBe(true);
         scope.$emit('twitterReady');
@@ -58,7 +58,7 @@ describe('app controller', function() {
         expect(scope.requestError).toBe(errorObj);
     });
 
-    it('should contain empty query value', function() {
+    it('should contain empty query value when GET-params is blank', function() {
         createController({});
         scope.$emit('twitterReady');
         scope.$apply();
@@ -77,7 +77,7 @@ describe('app controller', function() {
         expect(twitterRequest).toHaveBeenCalled();
     });
 
-    it('should grab query from location service and search when twitter ready', function() {
+    it('should grab query from location service and search when twitter is ready', function() {
         createController({query: 'test'});
         scope.$emit('twitterReady');
         scope.$apply();
