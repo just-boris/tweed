@@ -1,4 +1,4 @@
-angular.module('tweed', ['twitter', 'pagetitle', 'trends', 'infinite-scroll', 'localStorageModule'])
+angular.module('tweed', ['twitter', 'makeLinks', 'pagetitle', 'trends', 'infinite-scroll', 'localStorageModule'])
 //default date formatter can't parse twitter date, use custom
 .filter('twitterDate', function($filter) {
     return function(date, format) {
