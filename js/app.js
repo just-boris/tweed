@@ -1,16 +1,4 @@
-angular.module('tweed', ['twitter', 'makeLinks', 'pagetitle', 'trends', 'infinite-scroll', 'localStorageModule'])
-//default date formatter can't parse twitter date, use custom
-.filter('twitterDate', function($filter) {
-    return function(date, format) {
-        if(date) {
-            var dateObj = new Date(date);
-            if(!isNaN(dateObj.valueOf())) {
-                return $filter('date')(dateObj, format);
-            }
-        }
-        return date;
-    }
-})
+angular.module('tweed', ['twitter', 'makeLinks', 'pagetitle', 'trends', 'dateFormat', 'infinite-scroll', 'localStorageModule'])
 .controller('AppCtrl', function($scope, $location, twitter) {
     "use strict";
     function beforeLoad() {

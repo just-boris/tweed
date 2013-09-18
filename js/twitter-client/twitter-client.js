@@ -1,4 +1,4 @@
-angular.module('twitter', ['ngResource']).factory('twitter', function($q, $timeout, $rootScope) {
+angular.module('twitter', []).factory('twitter', function($q, $timeout, $rootScope) {
     var cache = {};
     function callApi(method, params) {
         var deferred = $q.defer();
