@@ -64,6 +64,10 @@
                     Your local Trends
                     <small class="btn-link" ng-click="loadWorldwideTrends()">show worldwide</small>
                 </h4>
+                <div class="alert alert-danger" ng-show="trendsError">
+                    <h5><b>Error!</b></h5>
+                    <p ng-repeat="error in trendsError.errors">{{error.message}}. <span ng-show="error.code">Code: {{error.code}}</span></p>
+                </div>
                 <ul class="list-unstyled">
                     <li ng-repeat="trend in trends" class="trend">
                         <span class="btn-link" ng-click="find(trend.name);">{{trend.name}}</span>
@@ -71,7 +75,7 @@
                 </ul>
             </div>
             <div class="col-sm-8">
-                <h4 ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</h4>
+                <h4 ng-show="lastQuery">Statuses with "{{lastQuery}}":</h4>
                 <div class="alert alert-danger" ng-show="requestError">
                     <h5><b>Error!</b></h5>
                     <p ng-repeat="error in requestError.errors">{{error.message}}. <span ng-show="error.code">Code: {{error.code}}</span></p>

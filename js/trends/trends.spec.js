@@ -94,13 +94,13 @@ describe('twitter trends controller', function() {
 
     it('should show error message when geolocation fails', function() {
         navigator.geolocation.getCurrentPosition = function(callback, errback) {
-            errback();
+            errback({message: 'Simulated error'});
         };
         createController({'show-local-trends': true});
         scope.$emit('twitterReady');
 
-        expect(scope.$parent.requestError).toBeDefined();
-        expect(scope.$parent.requestError.errors[0].message).toBe('Geolocation error');
+        expect(scope.trendsError).toBeDefined();
+        expect(scope.trendsError.errors[0].message).toBe('Simulated error');
     });
     //TODO: create a test for unsupported geolocation. Geolocation object cannot be deleted to simulate this case
 

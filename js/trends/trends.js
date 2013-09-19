@@ -1,11 +1,12 @@
 angular.module('trends', ['twitter']).controller('TrendsCtrl', function($scope, twitter, $storage) {
     function onError(error) {
-        $scope.$parent.requestError = error;
+        $scope.trendsError = error;
     }
     function onLoadTrends(reply) {
         $scope.trends = reply[0].trends;
     }
     function loadTrendsOnPlace(woeid) {
+        delete $scope.trendsError;
         twitter.request("trends_place", {id:woeid}).then(onLoadTrends, onError);
     }
     $scope.loadLocalTrends = function() {
@@ -20,8 +21,8 @@ angular.module('trends', ['twitter']).controller('TrendsCtrl', function($scope, 
                 }).then(function(reply) {
                         loadTrendsOnPlace(reply[0].woeid);
                     }, onError);
-            }, function() {
-                onError({errors:[{message: 'Geolocation error'}]});
+            }, function(error) {
+                onError({errors:[{message: error.message}]});
                 $scope.$apply();
             });
         } else {
