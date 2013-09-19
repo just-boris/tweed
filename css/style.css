@@ -72,7 +72,7 @@
     margin-right: 5px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .heading {
         position: static;
     }
@@ -84,5 +84,10 @@
     }
     .heading h1 small {
         font-size: 18px;
+    }
+}
+@media (min-width: 768px) {
+    .trends {
+        float: right;
     }
 }

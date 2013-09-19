@@ -55,6 +55,21 @@
     </div>
     <div class="container content">
         <div class="row">
+            <div class="col-sm-4 trends" ng-controller="TrendsCtrl">
+                <h4 ng-hide="showLocalTrends">
+                    Worldwide Trends
+                    <small class="btn-link" ng-click="loadLocalTrends()">show local</small>
+                </h4>
+                <h4 ng-show="showLocalTrends">
+                    Your local Trends
+                    <small class="btn-link" ng-click="loadWorldwideTrends()">show worldwide</small>
+                </h4>
+                <ul class="list-unstyled">
+                    <li ng-repeat="trend in trends" class="trend">
+                        <span class="btn-link" ng-click="find(trend.name);">{{trend.name}}</span>
+                    </li>
+                </ul>
+            </div>
             <div class="col-sm-8">
                 <h4 ng-show="!requestError && lastQuery">Statuses with "{{lastQuery}}":</h4>
                 <div class="alert alert-danger" ng-show="requestError">
@@ -88,21 +103,6 @@
                         <span ng-switch-default>Show more tweets</span>
                     </span>
                 </button>
-            </div>
-            <div class="col-sm-4 trends" ng-controller="TrendsCtrl">
-                <h4 ng-hide="showLocalTrends">
-                    Worldwide Trends
-                    <small class="btn-link" ng-click="loadLocalTrends()">show local</small>
-                </h4>
-                <h4 ng-show="showLocalTrends">
-                    Your local Trends
-                    <small class="btn-link" ng-click="loadWorldwideTrends()">show worldwide</small>
-                </h4>
-                <ul class="list-unstyled">
-                    <li ng-repeat="trend in trends" class="trend">
-                        <span class="btn-link" ng-click="find(trend.name);">{{trend.name}}</span>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
