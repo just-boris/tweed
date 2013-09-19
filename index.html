@@ -75,7 +75,7 @@
                 </ul>
             </div>
             <div class="col-sm-8">
-                <h4 ng-show="lastQuery">Statuses with "{{lastQuery}}":</h4>
+                <h4 class="results-title" ng-show="lastQuery">Statuses with "{{lastQuery}}":</h4>
                 <div class="alert alert-danger" ng-show="requestError">
                     <h5><b>Error!</b></h5>
                     <p ng-repeat="error in requestError.errors">{{error.message}}. <span ng-show="error.code">Code: {{error.code}}</span></p>

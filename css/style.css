@@ -36,6 +36,12 @@
     overflow: hidden;
 }
 
+.results-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .tweet {
     border-bottom: 1px dashed #c2c2c2;
     overflow: hidden;
