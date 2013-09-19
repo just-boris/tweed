@@ -17,6 +17,12 @@ describe('link filter', function() {
         expect(makeLinks('#hashtag in the beginning and the #ending'))
             .toBe('<a href="/test?query=%23hashtag">#hashtag</a> in the beginning and the <a href="/test?query=%23ending">#ending</a>')
     });
+    it('should wrap comma and dot-separated hashtags', function() {
+        expect(makeLinks('follow me and #retweet,#followme,#followyou'))
+            .toBe('follow me and <a href="/test?query=%23retweet">#retweet</a>,<a href="/test?query=%23followme">#followme</a>,<a href="/test?query=%23followyou">#followyou</a>');
+        expect(makeLinks("#hashtag. that's #all."))
+            .toBe('<a href="/test?query=%23hashtag">#hashtag</a>. that\'s <a href="/test?query=%23all">#all</a>.');
+    });
     it('should wrap links in the a tag', function() {
         expect(makeLinks('see the link http://super-site.com/page.html'))
             .toBe('see the link <a href="http://super-site.com/page.html">http://super-site.com/page.html</a>');
